@@ -45,7 +45,7 @@ local function getPlayerData()
         end
     end
 
-    local rodsText = #fishingRods > 0 and table.concat(fishingRods, "\n") or "❌ ไม่มีเบ็ดตกปลา"
+    local rodsText = #fishingRods > 0 and table.concat(fishingRods, ", ") or "❌ ไม่มีเบ็ดตกปลา"
     local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. player.UserId .. "&width=420&height=420&format=png" 
 
     return {
@@ -61,30 +61,27 @@ end
 local function sendWebhook()
     local data = getPlayerData()
     local message = {
-        embeds = { {
+        embeds = {{
             title = "🌊🎣 **ข้อมูลผู้เล่นจาก Fisch** 🎣🌊",
             color = 3447003,
-            description = "📌 **ข้อมูลล่าสุดเกี่ยวกับผู้เล่นที่กำลังตกปลา**",
+            description = "ข้อมูลผู้เล่นล่าสุดที่ตกปลาอยู่ในเกม **Fisch**",
             fields = {
-                { name = "👤 **ชื่อผู้เล่น**", value = "`" .. data.name .. "`", inline = true },
-                { name = "📈 **เลเวล**", value = "`" .. tostring(data.level) .. "`", inline = true },
-                { name = "💰 **เงินที่มี**", value = "`" .. tostring(data.money) .. " C$`", inline = true },
-                { name = "📍 **ตำแหน่งที่ตกปลา**", value = data.position, inline = false },
-                { name = "🎣 **เบ็ดตกปลา**", value = "```\n" .. data.rods .. "\n```", inline = false },
+                {name = "👤 **ชื่อผู้เล่น**", value = "`" .. data.name .. "`", inline = true},
+                {name = "📈 **เลเวล**", value = "`" .. tostring(data.level) .. "`", inline = true},
+                {name = "💰 **เงินที่มี**", value = "`" .. tostring(data.money) .. " C$`", inline = true},
+                {name = "📍 **ตำแหน่งที่ตกปลา**", value = data.position, inline = false},
+                {name = "🎣 **เบ็ดตกปลาที่มี**", value = data.rods, inline = false},
             },
-            thumbnail = { url = data.avatar },
-            footer = {
-                text = "📅 ข้อมูลอัปเดตเมื่อ: " .. os.date("%Y-%m-%d %X"),
-                icon_url = "https://cdn-icons-png.flaticon.com/512/1804/1804945.png"
-            }
-        } },
+            thumbnail = {url = data.avatar},
+            footer = {text = "📅 ข้อมูลอัปเดตเมื่อ: " .. os.date("%Y-%m-%d %X"), icon_url = "https://cdn-icons-png.flaticon.com/512/1804/1804945.png"}
+        }},
         username = "🐟 Fisch Webhook Bot"
     }
 
     local response = request({
         Url = webhookURL,
         Method = "POST",
-        Headers = { ["Content-Type"] = "application/json" },
+        Headers = {["Content-Type"] = "application/json"},
         Body = game:GetService("HttpService"):JSONEncode(message)
     })
 
